@@ -4,7 +4,7 @@
 
 The following Express server defines middleware functions that execute sequentially using `next()`. Each function logs a message before passing control to the next middleware.
 
-````javascript
+```javascript
 const express = require("express");
 const app = express();
 
@@ -27,7 +27,7 @@ app.use(
 app.listen(3000, () => {
   console.log("Server started successfully on port 3000...");
 });
-
+```
 
 ## **Possible Cases with `next()` and `res.send()`**
 
@@ -51,7 +51,7 @@ app.use(
     res.send("Final Response");
   }
 );
-````
+```
 
 #### **Console Output:**
 
