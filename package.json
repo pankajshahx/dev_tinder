@@ -1,0 +1,24 @@
+{
+  "name": "devtinder",
+  "version": "1.0.0",
+  "description": "tinder for developers",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "nodejs",
+    "javascript",
+    "express"
+  ],
+  "author": "Pankaj Shah",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
