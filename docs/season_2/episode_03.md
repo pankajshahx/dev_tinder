@@ -52,3 +52,32 @@ Versioning follows the **MAJOR.MINOR.PATCH** format:
 🔹 **Use `~` for safer updates** (only patch updates).  
 🔹 **Use `^` for minor version flexibility** (includes new features without breaking changes).  
 🔹 **Avoid breaking changes by locking versions in `package-lock.json`**.
+
+---
+
+## **8. Creating a Basic Express Server**
+
+Below is a simple Express.js server example:
+
+```javascript
+// Import the express module
+const express = require("express");
+
+// Create an Express application
+const app = express();
+
+// Define a route for "/hello"
+app.use("/hello", (req, res) => {
+  res.send("Hello Hello hello good morning!");
+});
+
+// Define a default route for "/"
+app.use("/", (req, res) => {
+  res.send("Hello from Server");
+});
+
+// Start the server on port 3000
+app.listen(3000, () => {
+  console.log("server started successfully on port 3000...");
+});
+```
