@@ -286,3 +286,115 @@ app.all("/user", (req, res) => {
 - **Use `app.all()` for route handling** when responding to all HTTP methods for a specific path.
 
 🚀 **Now you understand middleware and how to use `app.use()` vs `app.all()` in Express!**
+
+# **Error Handling in Express**
+
+## **1. What is Error Handling?**
+
+Error handling in Express is a way to catch and respond to errors that occur during request processing. It ensures that the application does not crash and provides meaningful responses to the client.
+
+---
+
+## **2. Types of Error Handling in Express**
+
+### **2.1 Synchronous Error Handling**
+
+Errors occurring in synchronous code can be caught using try-catch blocks.
+
+```javascript
+const express = require("express");
+const app = express();
+
+app.get("/sync-error", (req, res) => {
+  try {
+    throw new Error("Synchronous Error!");
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+});
+```
+
+### **2.2 Asynchronous Error Handling**
+
+Errors in asynchronous code should be passed to the next() function to be caught by error-handling middleware.
+
+```javascript
+app.get("/async-error", async (req, res, next) => {
+  try {
+    await Promise.reject(new Error("Asynchronous Error!"));
+  } catch (error) {
+    next(error);
+  }
+});
+```
+
+### **2.3 Global Error Handling Middleware**
+
+Express provides a default error-handling middleware that catches errors and responds to the client.
+
+```javascript
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res
+    .status(500)
+    .send({ message: "Something went wrong!", error: err.message });
+});
+```
+
+---
+
+## **3. Custom Error Handling**
+
+### **3.1 Handling 404 Not Found**
+
+If a request doesn't match any route, send a custom 404 response.
+
+```javascript
+app.use((req, res, next) => {
+  res.status(404).send({ message: "Route Not Found" });
+});
+```
+
+### **3.2 Handling Specific Errors**
+
+You can handle specific types of errors using conditional checks in middleware.
+
+```javascript
+app.use((err, req, res, next) => {
+  if (err.message === "Unauthorized Access") {
+    return res.status(401).send({ message: "Unauthorized" });
+  }
+  next(err);
+});
+```
+
+### **3.3 Handling Validation Errors**
+
+If you are using validation libraries like `express-validator`, handle validation errors separately.
+
+```javascript
+const { validationResult } = require("express-validator");
+
+app.post("/user", (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  next();
+});
+```
+
+---
+
+## **4. Use Cases of Error Handling**
+
+✅ Prevents server crashes due to uncaught errors.
+✅ Sends user-friendly error messages to the client.
+✅ Logs errors for debugging.
+✅ Helps manage different types of errors efficiently.
+
+---
+
+## **5. Conclusion**
+
+Proper error handling ensures a robust and stable Express application. Using middleware, we can catch and manage different types of errors effectively. 🚀
