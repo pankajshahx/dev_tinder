@@ -23,7 +23,7 @@ app.use(express.json());
 
 // app.get("/user/data", (req, res, next) => {
 //   try {
-//     throw new Error("Error occured");
+//     throw new Error("Error occurred");
 //     res.send("User Data");
 //   } catch (err) {
 //     res.status(500).send("Something went wrong in user Data");
@@ -36,16 +36,69 @@ app.use(express.json());
 //     res.status(500).send("Something went wrong");
 //   }
 // });
+app.get("/user", async (req, res) => {
+  const email = req.body.email;
+  try {
+    const users = await User.findOne({ email: email });
+    res.send(users);
+  } catch (err) {
+    res.status(500).send("Something went wrong");
+  }
+});
+app.get("/feed", async (req, res) => {
+  try {
+    const users = await User.find({});
+    res.send(users);
+  } catch (err) {
+    res.status(500).send("Something went wrong");
+  }
+});
 
 app.post("/signup", async (req, res) => {
   console.log(req.body);
+  const ALLOWED_DATA = [
+    "firstName",
+    "lastName",
+    "email",
+    "password",
+    "age",
+    "gender",
+  ];
+  const receivedData = Object.keys(req.body);
+  const isValidOperation = receivedData.every((data) =>
+    ALLOWED_DATA.includes(data)
+  );
+  if (!isValidOperation) {
+    return res.status(400).send("Invalid data formate");
+  }
 
   const user = new User(req.body);
   try {
     await user.save();
     res.send("User created successfully");
   } catch (err) {
+    res.status(500).send("Something went wrong" + err);
+  }
+});
+
+app.delete("/user", async (req, res) => {
+  const userId = req.body.userId;
+  try {
+    await User.findByIdAndDelete(userId);
+    res.send("User deleted successfully");
+  } catch (err) {
     res.status(500).send("Something went wrong");
+  }
+});
+
+app.patch("/user", async (req, res) => {
+  const userId = req.body.userId;
+  const update = req.body;
+  try {
+    await User.findByIdAndUpdate(userId, update, { runValidators: true });
+    res.send("User updated successfully");
+  } catch (err) {
+    res.status(500).send("Something went wrong" + err);
   }
 });
 
