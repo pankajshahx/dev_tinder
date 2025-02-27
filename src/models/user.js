@@ -1,5 +1,8 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
 const userSchema = new mongoose.Schema(
   {
     firstName: {
@@ -34,7 +37,6 @@ const userSchema = new mongoose.Schema(
     age: {
       type: Number,
       min: [18, "Age should be greater than 18"],
-      required: [true, "Age is required"],
     },
     gender: {
       type: String,
@@ -53,5 +55,21 @@ const userSchema = new mongoose.Schema(
   { timestamps: true, strict: true }
 );
 
+userSchema.methods.getJWTToken = async function () {
+  const user = this;
+  const token = jwt.sign({ _id: user._id }, "DEV@TINDER2020", {
+    expiresIn: "2h",
+  });
+  return token;
+};
+
+userSchema.methods.validatePassword = async function (userInputPassword) {
+  const user = this;
+  const isPassWordValid = await bcrypt.compare(
+    userInputPassword,
+    user.password
+  );
+  return isPassWordValid;
+};
 const User = mongoose.model("User", userSchema);
 module.exports = User;
