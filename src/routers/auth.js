@@ -46,4 +46,41 @@ authRouter.post("/signin", async (req, res) => {
     res.status(500).send("Invalid credentials");
   }
 });
+
+authRouter.get("/signout", (req, res) => {
+  try {
+    res.cookie("token", null, {
+      expires: new Date(Date.now()),
+    });
+    res.send("User logged out successfully");
+  } catch (err) {
+    res.status(500).send("Something went wrong" + err);
+  }
+});
+
+authRouter.patch("/restPassword", async (req, res) => {
+  try {
+    const { email, oldPassword, newPassword } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(400).send("Invalid Credentials");
+    }
+    const isPassWordValid = await user.validatePassword(oldPassword);
+    if (!isPassWordValid) {
+      return res.status(400).send("Invalid Credentials");
+    }
+
+    const newHasPassword = await bcrypt.hash(newPassword, 10);
+    user.password = newHasPassword;
+    await user.save();
+    res.json({
+      message: `${user.firstName} your password updated successfully`,
+      data: user,
+    });
+  } catch (err) {
+    res.status(500).send("Something went wrong" + err);
+  }
+});
 module.exports = authRouter;

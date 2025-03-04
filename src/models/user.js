@@ -51,6 +51,17 @@ const userSchema = new mongoose.Schema(
         return this.age && this.age > 25;
       },
     },
+    photoUrl: {
+      type: String,
+      validate: (value) => {
+        if (!validator.isURL(value)) {
+          throw new Error("Invalid URL");
+        }
+      },
+    },
+    about: {
+      type: String,
+    },
   },
   { timestamps: true, strict: true }
 );
