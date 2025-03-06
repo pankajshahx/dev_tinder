@@ -1,6 +1,7 @@
 const express = require("express");
 const { userAuth } = require("../middleware/auth");
 const ConnectionRequest = require("../models/ConnectionRequest");
+const User = require("../models/user");
 
 const connectionRequestRouter = express.Router();
 
@@ -31,6 +32,11 @@ connectionRequestRouter.post(
       });
       if (existingRequest) {
         return res.status(400).send("Request already exists");
+      }
+
+      const toUser = await User.findById(toUserId);
+      if (!toUser) {
+        return res.status(400).send("User not found");
       }
 
       const connectionRequest = new ConnectionRequest({
