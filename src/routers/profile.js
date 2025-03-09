@@ -35,13 +35,13 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
     res.status(500).send("Something went wrong" + err);
   }
 });
-profileRouter.get("/feed", userAuth, async (req, res) => {
-  try {
-    const users = await User.find({});
-    res.send(users);
-  } catch (err) {
-    res.status(500).send("Something went wrong" + err);
-  }
-});
+// profileRouter.get("/feed", userAuth, async (req, res) => {
+//   try {
+//     const users = await User.find({});
+//     res.send(users);
+//   } catch (err) {
+//     res.status(500).send("Something went wrong" + err);
+//   }
+// });
 
 module.exports = profileRouter;
