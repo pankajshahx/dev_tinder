@@ -17,8 +17,11 @@ profileRouter.get("/profile/view", userAuth, async (req, res) => {
 });
 
 profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
+  console.log("Received PATCH request at /profile/edit");
+  console.log("req.body:", req.body);
+  console.log("req.user:", req.user);
+
   try {
-    //validate the request
     const isAllowed = validateProfileEditData(req);
 
     if (!isAllowed) {
@@ -26,18 +29,19 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
     }
 
     const loggedInUser = req.user;
-
     Object.keys(req.body).forEach((key) => (loggedInUser[key] = req.body[key]));
     await loggedInUser.save();
 
     res.json({
-      message: `${loggedInUser.firstName} your profile updated successfully`,
+      message: `${loggedInUser.firstName}, your profile updated successfully`,
       data: loggedInUser,
     });
   } catch (err) {
-    res.status(500).send("Something went wrong" + err);
+    console.error("Error updating profile:", err);
+    res.status(500).send("Something went wrong: " + err);
   }
 });
+
 // profileRouter.get("/feed", userAuth, async (req, res) => {
 //   try {
 //     const users = await User.find({});

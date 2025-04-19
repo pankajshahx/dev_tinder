@@ -6,8 +6,14 @@ const cors = require("cors");
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
-
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    credentials: true,
+  })
+);
+app.options("*", cors());
 const authRouter = require("./routers/auth");
 const profileRouter = require("./routers/profile");
 // const exampleRouter = require("./routers/example");
